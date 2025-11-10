@@ -16,6 +16,11 @@ surface_cairo = pygame.Surface((screen_width,screen_height), pygame.SRCALPHA)
 #OBJEK DISINI
 player_satu = Player()
 
+enemy_list = []
+partikel_list = []
+
+tes_musuh = Enemy(600,200)
+enemy_list.append(tes_musuh)
 
 
 #Game Loop
@@ -23,12 +28,32 @@ running = True
 clock = pygame.time.Clock()
 
 while running:
+    dt = clock.tick(fps) / 1000.0
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                if enemy_list:
+                    target = enemy_list[0]
+                    new_laser = Laser(player_satu.x, player_satu.y, target)
+                    partikel_list.append(new_laser)
+                    
             
-    screen.fill((255,255,255))
+    #UPDATEEEE DISINI       
+    player_satu.update(dt)
     
+    for enemy in enemy_list:
+        enemy.update(dt,player_satu.x, player_satu.y)         
+            
+    for partikel in partikel_list:
+        partikel.update(dt)
+            
+            
+            
+    # --------------------------------
     surface_bridge = cairo.ImageSurface.create_for_data(
     surface_cairo.get_buffer(),
     cairo.FORMAT_ARGB32,
@@ -36,24 +61,34 @@ while running:
     screen_height
 )
     ctx = cairo.Context(surface_bridge)
-    
     surface_cairo.fill((0,0,0,0))
-    #GAMBAR BG DISINI
-  
+    # ----------------------------------
     
+    #GAMBAR BG DISINI
+    ctx.set_source_rgb(*C_WHITE)
+    ctx.paint()
+      
     
     #GAMBAR OBJEK DISINI
     player_satu.draw(ctx)
     
+    for enemy in enemy_list:
+        enemy.draw(ctx)
+    
+    for partikel in partikel_list:
+        partikel.draw(ctx)
     
     
     # -----------------------
     surface_bridge.flush()
     del ctx
     del surface_bridge
-    
     screen.blit(surface_cairo, (0, 0))
     pygame.display.flip()
+    #------------------------
+    
+    enemy_list = [e for e in enemy_list if e.is_alive]
+    partikel_list = [p for p in partikel_list if p.is_alive]
     
     clock.tick(fps)
     
