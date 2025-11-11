@@ -19,7 +19,7 @@ player_satu = Player()
 enemy_list = []
 partikel_list = []
 
-tes_musuh = Enemy(600,200)
+tes_musuh = Enemy(800,400,"Ahmat",40, 20)
 enemy_list.append(tes_musuh)
 
 
