@@ -74,10 +74,24 @@ while running:
     current_time = pygame.time.get_ticks() / 1000
     
     if current_time - last_spawn_time > interval_spawn:
-        spawn_x = random.randint(50, screen_width - 50 )
-        spawn_y = -20
         
-        new_enemy = Enemy(spawn_x, spawn_y, "Ahmat", 80, 10)
+        side = random.choice(['atas', 'bawah', 'kanan','kiri'])
+        spawn_padding = 20
+        
+        if side == 'atas':
+            spawn_x = random.randint(0, screen_width)
+            spawn_y = -spawn_padding
+        elif side == 'bawah':
+            spawn_x = random.randint(0, screen_width)
+            spawn_y = screen_height + spawn_padding
+        elif side == 'kanan':
+            spawn_x = screen_width + spawn_padding
+            spawn_y = random.randint(0,screen_height)
+        elif side == 'kiri':
+            spawn_x = -spawn_padding
+            spawn_y = random.randint(0,screen_height)
+        
+        new_enemy = Enemy(spawn_x, spawn_y, "Ahmat", 100, 10)
         enemy_list.append(new_enemy)
         
         last_spawn_time = current_time
@@ -184,6 +198,22 @@ while running:
     
     for partikel in partikel_list:
         partikel.draw(ctx)
+
+
+    #TIMEEEEEEEEEEEEEEEEEEEEEER
+    timer_text = f"Waktu: {current_time:.2f}" 
+    
+    ctx.set_source_rgb(*C_BLACK) 
+    ctx.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+    ctx.set_font_size(24)
+    
+    (x_bearing, y_bearing, text_width, text_height, x_advance, y_advance) = ctx.text_extents(timer_text)
+    
+    text_x_pos = (screen_width / 2) - (text_width / 2)
+    text_y_pos = 40 
+    
+    ctx.move_to(text_x_pos, text_y_pos)
+    ctx.show_text(timer_text)
 
     # -----------------------
     surface_bridge.flush()

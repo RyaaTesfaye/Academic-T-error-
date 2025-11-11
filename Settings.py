@@ -22,7 +22,7 @@ C_BOMB = (0.1, 0.2, 0.4)
 
 #PLAYER
 max_health_player = 5
-attack_range_player = 150
+attack_range_player = 200
 
 # PARTIKEL
 laser_speed = 900
@@ -33,4 +33,4 @@ laser_width_glow = 8
 
 
 #ENEMY
-interval_spawn = 5
+interval_spawn = 4
