@@ -17,8 +17,16 @@ C_GREEN = (0.2, 1.0, 0.2)
 C_SOROTAN = (0.6, 0.2, 0.8, 0.5)
 C_BOMB_GLOW = (0.3, 0.1, 0.5, 0.4)
 C_BOMB = (0.1, 0.2, 0.4)
+C_BG_SKY = (0.88, 0.92, 0.96)
+C_BG_GRASS = (0.70, 0.80, 0.55)
+C_BG_PAVING = (0.75, 0.75, 0.75)     
+C_BG_BORDER_BLUE = (0.1, 0.25, 0.75)
 
-
+#GLITCH
+glitch_enabled = True    
+glitch_interval = 5  
+glitch_duration = 0.2
+glitch_alpha = 0.7
 
 #PLAYER
 max_health_player = 5
@@ -34,3 +42,4 @@ laser_width_glow = 8
 
 #ENEMY
 interval_spawn = 4
+

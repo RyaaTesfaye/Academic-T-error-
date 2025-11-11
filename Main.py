@@ -6,6 +6,7 @@ from Settings import *
 from Player import *
 from Enemy import *
 from Particle import *
+from background import *
 
 pygame.init()
 
@@ -16,7 +17,7 @@ surface_cairo = pygame.Surface((screen_width,screen_height), pygame.SRCALPHA)
 
 #OBJEK DISINI
 player_satu = Player()
-
+background = Background()
 enemy_list = []
 partikel_list = []
 
@@ -75,6 +76,8 @@ while running:
     
     if current_time - last_spawn_time > interval_spawn:
         
+        tipe = random.choice(['gampang','sedang','elite','susah','boss'])
+        
         side = random.choice(['atas', 'bawah', 'kanan','kiri'])
         spawn_padding = 20
         
@@ -91,7 +94,7 @@ while running:
             spawn_x = -spawn_padding
             spawn_y = random.randint(0,screen_height)
         
-        new_enemy = Enemy(spawn_x, spawn_y, "Ahmat", 100, 10)
+        new_enemy = Enemy(spawn_x, spawn_y, tipe)
         enemy_list.append(new_enemy)
         
         last_spawn_time = current_time
@@ -143,8 +146,9 @@ while running:
     # ----------------------------------
     
     #GAMBAR BG DISINI
-    ctx.set_source_rgb(*C_WHITE)
-    ctx.paint()
+    # ctx.set_source_rgb(*C_WHITE)
+    # ctx.paint()
+    background.draw(ctx)
       
     
     #GAMBAR OBJEK DISINI
