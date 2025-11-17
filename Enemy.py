@@ -2,40 +2,49 @@ import cairo
 import math
 from Settings import *
 import random
+from Player import *
 
 enemy_data = {
     "gampang":{
-        "word_list": ["NT","WOI", "L" ],
-        "speed": 85,
-        "radius": 15,
+        "word_list": ["NT", "WOI", "L", "TY", "GG", "EZ", "AFK", "BRB", "OTW", 
+                      "WKWK", "LAG", "YGY", "OOT", "DC", "KOK", "BTW", "WP" ],
+        "speed": 90,
+        "radius": 10,
         "shape": "Goblin"
     },
     "sedang":{
-        "word_list": ["ERROR","DEBUG","TUGAS" ],
-        "speed": 70,
+        "word_list": ["ERROR", "DEBUG", "TUGAS", "KODING", "KUIS", "UTS", "UAS", 
+                      "NILAI", "ASPRAK", "DOSEN", "LAB", "IF", "ELSE", "FOR", 
+                      "BUG", "GIT", "REPO", "PUSH", "PULL", "CSS", "JAVA", "HTML" ],
+        "speed": 60,
         "radius": 20,
         "shape": "Skeleton"
     },
     "elite":{
-        "word_list": ["MATDAS","MATDIS","GRAFKOM" ],
-        "speed": 90,
-        "radius": 10,
+        "word_list": ["MATDAS", "MATDIS", "GRAFKOM", "ADPL", "JARKOM", "PBO", 
+                      "FANGPRO", "IMK", "PRPL", "PWEB", "BASDA", "AI", "MKWU", 
+                      "STRUKDAT", "KALKULUS", "STATISTIKA" ],
+        "speed": 45,
+        "radius": 18,
         "shape": "Ahmat"
     },
     "susah":{
-        "word_list": ["GABUT","MALES","NGANTUK" ],
-        "speed": 40,
-        "radius": 23,
+        "word_list": ["GABUT", "MALES", "NGANTUK", "DEADLINE", "BINGUNG", "PUSING", 
+                      "MUMET", "STRES", "PANIK", "LUPA", "BEGADANG", "INSECURE", 
+                      "REMIDI", "HER", "GALAU" ],
+        "speed": 36,
+        "radius": 25,
         "shape": "Alpin"
     },
     "boss":{
-        "word_list": ["METODOLOGI","PENELITIAN", ],
+        "word_list": ["METODOLOGI", "PENELITIAN", "IMPLEMENTASI","SPESIFIKASI",
+                      "VERIFIKASI","VALIDASI","ENKAPSULASI", "ARSITEKTUR",
+                      "KRIPTOGRAFI", "KOMPUTASIONAL" ],
         "speed": 30,
         "radius": 50,
-        "shape": "Erick"
+        "shape": "Boss"
     }
-}
-    
+}    
 
 class Enemy:
     def __init__(self,x,y, enemy_type):
@@ -58,9 +67,9 @@ class Enemy:
         self.radius = data["radius"]
         self.shape = data["shape"]
     
-    def update(self, dt, player_x, player_y):
-        dx = player_x - self.x
-        dy = player_y - self.y
+    def update(self, dt, player_objek):
+        dx = player_objek.x - self.x
+        dy = player_objek.y - self.y
         distance = math.hypot(dx, dy)
         
         if distance > 1:
@@ -71,10 +80,10 @@ class Enemy:
 
         if distance < self.radius + 20:
             self.is_alive = False
+            player_objek.take_damage(1) 
             
     def draw(self,ctx):
-        
-        
+         
         ctx.save()
         ctx.translate(self.x, self.y) 
         ctx.set_source_rgb(*C_RED_ENEMY) 
@@ -95,7 +104,7 @@ class Enemy:
             ctx.set_line_width(3)
             ctx.rectangle(-self.radius, -self.radius, self.radius * 2, self.radius * 2)
             ctx.stroke()
-        elif self.shape == "Erick":
+        elif self.shape == "Boss":
             ctx.rectangle(-self.radius/2, -self.radius/2, self.radius, self.radius)
             ctx.fill()
             ctx.set_source_rgb(*C_BLACK)

@@ -21,6 +21,7 @@ C_BG_SKY = (0.88, 0.92, 0.96)
 C_BG_GRASS = (0.70, 0.80, 0.55)
 C_BG_PAVING = (0.75, 0.75, 0.75)     
 C_BG_BORDER_BLUE = (0.1, 0.25, 0.75)
+C_RED_TRANS = (1.0, 0.2, 0.2, 0.4)
 
 #GLITCH
 glitch_enabled = True    
@@ -30,7 +31,7 @@ glitch_alpha = 0.7
 
 #PLAYER
 max_health_player = 5
-attack_range_player = 200
+attack_range_player = 250
 
 # PARTIKEL
 laser_speed = 900
