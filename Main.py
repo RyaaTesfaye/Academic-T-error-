@@ -9,6 +9,7 @@ from Particle import *
 from background import *
 from score.score import highscore, listScore
 from wave_manager import *
+from components.hearth import create_heart
 
 # ============================================
 # INISIALISASI PYGAME
@@ -363,14 +364,13 @@ while running:
             
             # HP MASIH ADA
             if i < player_satu.health:
-                ctx.set_source_rgb(*C_RED_ENEMY)
-                ctx.rectangle(kotak_x, kotak_y, hp_size, hp_size)
+                create_heart(ctx, kotak_x, kotak_y, hp_size, hp_size, C_RED_ENEMY)
                 ctx.fill()
             # HP HILANG
             else:
                 ctx.set_source_rgb(*C_LAPTOP_GREY)
                 ctx.set_line_width(2)
-                ctx.rectangle(kotak_x, kotak_y, hp_size, hp_size)
+                create_heart(ctx, kotak_x, kotak_y, hp_size, hp_size, C_LAPTOP_GREY)
                 ctx.stroke()
 
     # ============================================
