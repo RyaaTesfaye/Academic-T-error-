@@ -1,7 +1,7 @@
 import cairo
 import math
 from Settings import *
-from Enemy import *
+from enemy.Enemy import Enemy
 
 class Laser:
     def __init__(self, start_x,start_y, target_enemy):
