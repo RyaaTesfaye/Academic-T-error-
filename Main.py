@@ -10,7 +10,7 @@ from background import *
 from score.score import highscore, listScore
 from wave_manager import *
 from components.hearth import create_heart
-
+from components.scoreBoard import scoreBoard
 # ============================================
 # INISIALISASI PYGAME
 # ============================================
@@ -79,6 +79,7 @@ except Exception as e:
 game_state = "MENU"
 last_skor_time = 0
 Menu = True
+Main = True
 start_time = 0
 
 # ============================================
@@ -321,24 +322,16 @@ while running:
         for partikel in partikel_list:
             partikel.draw(ctx)
 
+
         # ============================================
-        # UI TIMER
+        # UI SCORE BOARD
         # ============================================
-        timer_text = f"Waktu: {game_time:.2f}"
-
-        # SETUP FONT TIMER
-        ctx.set_source_rgb(*C_BLACK)
-        ctx.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-        ctx.set_font_size(24)
-
-        # HITUNG POSISI TIMER
-        (x_bearing, y_bearing, text_width, text_height, x_advance, y_advance) = ctx.text_extents(timer_text)
-        text_x_pos = (screen_width / 2) - (text_width / 2)
-        text_y_pos = 40
-
-        # RENDER TIMER
-        ctx.move_to(text_x_pos, text_y_pos)
-        ctx.show_text(timer_text)
+        if Main:
+            liveScore = listScore()
+            Main = False
+        waktu = f"{game_time:.2f}"
+        liveScore["you"] = float(waktu)
+        SxoreBoard = scoreBoard(ctx, liveScore, 950, 0)
 
         # ============================================
         # UI WAVE INFO
@@ -348,7 +341,7 @@ while running:
         wave_text = f"WAVE {wave_manager.current_wave_idx + 1}"
 
         # RENDER WAVE INFO
-        ctx.move_to(screen_height - 180, 40)
+        ctx.move_to(screen_height - 40, 40)
         ctx.show_text(wave_text)
 
         # ============================================
@@ -434,9 +427,10 @@ while running:
 
         if Menu: 
             scoreList = listScore()
+
             Menu = False
 
-        lokasi = [250, 300, 350, 400]
+        lokasi = [250, 300, 350, 400, 450]
         for i, data in enumerate(scoreList):
                 ctx.set_font_size(20)
                 ctx.move_to(50,lokasi[i])
@@ -466,6 +460,7 @@ while running:
         if not score_calculated:
             timer_end = highscore(last_skor_time)
             Menu = True
+            Main = True
             score_calculated = True
 
         for event in events:
