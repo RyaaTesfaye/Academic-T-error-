@@ -11,6 +11,7 @@ from score.score import highscore, listScore
 from wave_manager import *
 from components.hearth import create_heart
 from components.scoreBoard import scoreBoard
+from components.arrow import draw_arrow
 # ============================================
 # INISIALISASI PYGAME
 # ============================================
@@ -328,10 +329,33 @@ while running:
         # ============================================
         if Main:
             liveScore = listScore()
+            click_cooldown = 0.3
+            last_click_time = 0
+            Is_Full = True
             Main = False
+            arrow_x, arrow_y = 1070, 60
         waktu = f"{game_time:.2f}"
         liveScore["you"] = float(waktu)
-        SxoreBoard = scoreBoard(ctx, liveScore, 950, 0)
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = event.pos
+            arrow_hitbox = pygame.Rect(0, 0, 30, 30) 
+            if Is_Full:
+                arrow_hitbox.center = (arrow_x, arrow_y)
+            else:
+                arrow_hitbox.center = (arrow_x, arrow_y)
+
+            if arrow_hitbox.collidepoint(mouse_pos):
+                if current_time - last_click_time > click_cooldown:
+                    Is_Full = not Is_Full
+                    last_click_time = current_time
+                    if Is_Full:
+                        arrow_y = 60
+                    else:
+                        arrow_y = 217
+
+        SxoreBoard = scoreBoard(ctx, liveScore, 950, 0, Is_Full)
+        draw_arrow(ctx, arrow_x, arrow_y, direction=Is_Full)
 
         # ============================================
         # UI WAVE INFO
