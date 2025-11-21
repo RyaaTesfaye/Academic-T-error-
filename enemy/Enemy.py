@@ -4,10 +4,10 @@ from Settings import *
 import random
 from Player import *
 import json
-from lib.functions.drawGhost import draw_ghost
-from lib.functions.drawSkeleton import draw_skeleton
-from lib.functions.drawBook import draw_book
-from lib.functions.drawHeart import draw_heart
+from components.enemy.drawGhost import draw_ghost
+from components.enemy.drawSkeleton import draw_skeleton
+from components.enemy.drawBook import draw_book
+from components.enemy.drawHeart import draw_heart
 
 
 # settings

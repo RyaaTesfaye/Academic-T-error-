@@ -5,7 +5,7 @@ import random
 from Settings import *
 from Player import *
 from enemy.Enemy import Enemy
-from Particle import *
+from components.Particle import *
 from background import *
 from score.score import highscore, listScore
 from wave_manager import *
@@ -51,9 +51,9 @@ current_type_word = ""
 sfx = {}
 
 sfx_files = {
-    "laser": "sfx/laser_mini.wav",
-    "bomb": "sfx/explosion_enem.wav",
-    "glitch": "sfx/glitch_char.wav"
+    "laser": "lib/sfx/laser_mini.wav",
+    "bomb": "lib/sfx/explosion_enem.wav",
+    "glitch": "lib/sfx/glitch_char.wav"
 }
 
 # LOAD SFX FILES
