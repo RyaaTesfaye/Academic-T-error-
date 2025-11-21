@@ -7,8 +7,8 @@ from Player import *
 from enemy.Enemy import Enemy
 from components.Particle import *
 from background import *
-from score.score import highscore, listScore
 from wave_manager import *
+from score.score import highscore, listScore
 from components.hearth import create_heart
 from components.scoreBoard import scoreBoard
 from components.arrow import draw_arrow
@@ -69,7 +69,7 @@ for name, file_path in sfx_files.items():
 # SETUP AUDIO - BGM
 # ============================================
 try:
-    pygame.mixer.music.load("sfx/BGM_PERUNGGU.ogg")
+    pygame.mixer.music.load("lib/sfx/BGM_PERUNGGU.ogg")
     pygame.mixer.music.set_volume(0.2)
 except Exception as e:
     print(f"Gagal load BGM: {e}")
