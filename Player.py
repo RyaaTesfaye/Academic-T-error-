@@ -29,7 +29,7 @@ class Player:
         except:
             self.sprite_img = None
             
-    def update(self, dt):
+    def update(self, dt, sfx_d):
         if not glitch_enabled or not self.sprite_cairo:
             return
         if self.is_glitching:
@@ -42,6 +42,8 @@ class Player:
             self.glitch_timer -= dt
             if self.glitch_timer <= 0:
                 self.is_glitching = True
+                if sfx_d and "glitch" in sfx_d:
+                    sfx_d["glitch"].play()
     
     def draw(self,ctx):
         ctx.save()

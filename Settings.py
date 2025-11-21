@@ -22,11 +22,12 @@ C_BG_GRASS = (0.70, 0.80, 0.55)
 C_BG_PAVING = (0.75, 0.75, 0.75)     
 C_BG_BORDER_BLUE = (0.1, 0.25, 0.75)
 C_RED_TRANS = (1.0, 0.2, 0.2, 0.4)
+C_GREEN_TRANS =(0, 0.5, 0, 0.3)
 
 #GLITCH
 glitch_enabled = True    
 glitch_interval = 5  
-glitch_duration = 0.2
+glitch_duration = 0.3
 glitch_alpha = 0.7
 
 #PLAYER
@@ -42,5 +43,5 @@ laser_width_glow = 8
 
 
 #ENEMY
-interval_spawn = 4
+interval_spawn = 3
 
