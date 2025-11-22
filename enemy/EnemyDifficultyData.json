@@ -1,0 +1,117 @@
+{
+  "gampang": {
+    "word_list": [
+      "NT",
+      "WOI",
+      "L",
+      "TY",
+      "GG",
+      "EZ",
+      "AFK",
+      "BRB",
+      "OTW",
+      "WKWK",
+      "LAG",
+      "YGY",
+      "OOT",
+      "DC",
+      "KOK",
+      "BTW",
+      "WP"
+    ],
+    "speed": 90,
+    "radius": 10,
+    "shape": "Goblin"
+  },
+  "sedang": {
+    "word_list": [
+      "ERROR",
+      "DEBUG",
+      "TUGAS",
+      "KODING",
+      "KUIS",
+      "UTS",
+      "UAS",
+      "NILAI",
+      "ASPRAK",
+      "DOSEN",
+      "LAB",
+      "IF",
+      "ELSE",
+      "FOR",
+      "BUG",
+      "GIT",
+      "REPO",
+      "PUSH",
+      "PULL",
+      "CSS",
+      "JAVA",
+      "HTML"
+    ],
+    "speed": 60,
+    "radius": 20,
+    "shape": "Skeleton"
+  },
+  "elite": {
+    "word_list": [
+      "MATDAS",
+      "MATDIS",
+      "GRAFKOM",
+      "ADPL",
+      "JARKOM",
+      "PBO",
+      "FANGPRO",
+      "IMK",
+      "PRPL",
+      "PWEB",
+      "BASDA",
+      "AI",
+      "MKWU",
+      "STRUKDAT",
+      "KALKULUS",
+      "STATISTIKA"
+    ],
+    "speed": 45,
+    "radius": 18,
+    "shape": "Ahmat"
+  },
+  "susah": {
+    "word_list": [
+      "GABUT",
+      "MALES",
+      "NGANTUK",
+      "DEADLINE",
+      "BINGUNG",
+      "PUSING",
+      "MUMET",
+      "STRES",
+      "PANIK",
+      "LUPA",
+      "BEGADANG",
+      "INSECURE",
+      "REMIDI",
+      "HER",
+      "GALAU"
+    ],
+    "speed": 36,
+    "radius": 25,
+    "shape": "Alpin"
+  },
+  "boss": {
+    "word_list": [
+      "METODOLOGI",
+      "PENELITIAN",
+      "IMPLEMENTASI",
+      "SPESIFIKASI",
+      "VERIFIKASI",
+      "VALIDASI",
+      "ENKAPSULASI",
+      "ARSITEKTUR",
+      "KRIPTOGRAFI",
+      "KOMPUTASIONAL"
+    ],
+    "speed": 30,
+    "radius": 50,
+    "shape": "Boss"
+  }
+}

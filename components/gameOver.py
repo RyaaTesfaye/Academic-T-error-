@@ -1,0 +1,3 @@
+def GameOver(score):
+    pass
+    

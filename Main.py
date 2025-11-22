@@ -4,11 +4,14 @@ import math
 import random
 from Settings import *
 from Player import *
-from Enemy import *
-from Particle import *
+from enemy.Enemy import Enemy
+from components.Particle import *
 from background import *
 from wave_manager import *
-
+from score.score import highscore, listScore
+from components.hearth import create_heart
+from components.scoreBoard import scoreBoard
+from components.arrow import draw_arrow
 # ============================================
 # INISIALISASI PYGAME
 # ============================================
@@ -48,9 +51,9 @@ current_type_word = ""
 sfx = {}
 
 sfx_files = {
-    "laser": "sfx/laser_mini.wav",
-    "bomb": "sfx/explosion_enem.wav",
-    "glitch": "sfx/glitch_char.wav"
+    "laser": "lib/sfx/laser_mini.wav",
+    "bomb": "lib/sfx/explosion_enem.wav",
+    "glitch": "lib/sfx/glitch_char.wav"
 }
 
 # LOAD SFX FILES
@@ -66,7 +69,7 @@ for name, file_path in sfx_files.items():
 # SETUP AUDIO - BGM
 # ============================================
 try:
-    pygame.mixer.music.load("sfx/BGM_PERUNGGU.ogg")
+    pygame.mixer.music.load("lib/sfx/BGM_PERUNGGU.ogg")
     pygame.mixer.music.set_volume(0.2)
 except Exception as e:
     print(f"Gagal load BGM: {e}")
@@ -76,6 +79,8 @@ except Exception as e:
 # ============================================
 game_state = "MENU"
 last_skor_time = 0
+Menu = True
+Main = True
 start_time = 0
 
 # ============================================
@@ -179,9 +184,9 @@ while running:
         player_satu.update(dt, sfx)
         
         # CEK PLAYER MATI
-        # if player_satu.health <= 0:
-        #     game_state = "GAMEOVER"
-        #     pygame.mixer.music.stop()
+        if player_satu.health <= 0:
+            game_state = "GAMEOVER"
+            pygame.mixer.music.stop()
 
         # CEK VICTORY
         if wave_manager.is_game_cleared and len(enemy_list) == 0:
@@ -318,24 +323,39 @@ while running:
         for partikel in partikel_list:
             partikel.draw(ctx)
 
+
         # ============================================
-        # UI TIMER
+        # UI SCORE BOARD
         # ============================================
-        timer_text = f"Waktu: {game_time:.2f}"
+        if Main:
+            liveScore = listScore()
+            click_cooldown = 0.3
+            last_click_time = 0
+            Is_Full = True
+            Main = False
+            arrow_x, arrow_y = 1070, 60
+        waktu = f"{game_time:.2f}"
+        liveScore["you"] = float(waktu)
 
-        # SETUP FONT TIMER
-        ctx.set_source_rgb(*C_BLACK)
-        ctx.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
-        ctx.set_font_size(24)
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = event.pos
+            arrow_hitbox = pygame.Rect(0, 0, 30, 30) 
+            if Is_Full:
+                arrow_hitbox.center = (arrow_x, arrow_y)
+            else:
+                arrow_hitbox.center = (arrow_x, arrow_y)
 
-        # HITUNG POSISI TIMER
-        (x_bearing, y_bearing, text_width, text_height, x_advance, y_advance) = ctx.text_extents(timer_text)
-        text_x_pos = (screen_width / 2) - (text_width / 2)
-        text_y_pos = 40
+            if arrow_hitbox.collidepoint(mouse_pos):
+                if current_time - last_click_time > click_cooldown:
+                    Is_Full = not Is_Full
+                    last_click_time = current_time
+                    if Is_Full:
+                        arrow_y = 60
+                    else:
+                        arrow_y = 217
 
-        # RENDER TIMER
-        ctx.move_to(text_x_pos, text_y_pos)
-        ctx.show_text(timer_text)
+        SxoreBoard = scoreBoard(ctx, liveScore, 950, 0, Is_Full)
+        draw_arrow(ctx, arrow_x, arrow_y, direction=Is_Full)
 
         # ============================================
         # UI WAVE INFO
@@ -345,7 +365,7 @@ while running:
         wave_text = f"WAVE {wave_manager.current_wave_idx + 1}"
 
         # RENDER WAVE INFO
-        ctx.move_to(screen_height - 180, 40)
+        ctx.move_to(screen_height - 40, 40)
         ctx.show_text(wave_text)
 
         # ============================================
@@ -361,14 +381,13 @@ while running:
             
             # HP MASIH ADA
             if i < player_satu.health:
-                ctx.set_source_rgb(*C_RED_ENEMY)
-                ctx.rectangle(kotak_x, kotak_y, hp_size, hp_size)
+                create_heart(ctx, kotak_x, kotak_y, hp_size, hp_size, C_RED_ENEMY)
                 ctx.fill()
             # HP HILANG
             else:
                 ctx.set_source_rgb(*C_LAPTOP_GREY)
                 ctx.set_line_width(2)
-                ctx.rectangle(kotak_x, kotak_y, hp_size, hp_size)
+                create_heart(ctx, kotak_x, kotak_y, hp_size, hp_size, C_LAPTOP_GREY)
                 ctx.stroke()
 
     # ============================================
@@ -403,6 +422,10 @@ while running:
                     partikel_list = []
                     current_type_word = ""
                     target_enemy = None
+                    last_spawn_time = current_time
+                    score_calculated = False
+        
+        #GAMBAR BG DISINI
                     wave_manager = wave_managers()
                     start_time = pygame.time.get_ticks() / 1000
 
@@ -418,6 +441,26 @@ while running:
         ctx.move_to(400, 100)
         ctx.show_text("AKADEMIA T(ERROR)")
 
+        ctx.move_to(0,0)
+        
+
+        # LIST SCORE
+        ctx.set_font_size(30)
+        ctx.move_to(0,200)
+        ctx.show_text("High score:")
+
+        if Menu: 
+            scoreList = listScore()
+
+            Menu = False
+
+        lokasi = [250, 300, 350, 400, 450]
+        for i, data in enumerate(scoreList):
+                ctx.set_font_size(20)
+                ctx.move_to(50,lokasi[i])
+                ctx.show_text(f"{i+1}. {data}: {scoreList.get(data)}")
+
+        
         # RENDER TOMBOL MULAI
         if tombol_hover:
             ctx.set_source_rgb(*C_WHITE)
@@ -433,43 +476,41 @@ while running:
         ctx.move_to(550, 310)
         ctx.show_text("MULAI")
 
-    # ============================================
-    # STATE: GAME OVER
-    # ============================================
+        
     elif game_state == "GAMEOVER":
-        # ============================================
-        # INPUT KEMBALI KE MENU
-        # ============================================
+
+        global timer_end
+    
+        if not score_calculated:
+            timer_end = highscore(last_skor_time)
+            Menu = True
+            Main = True
+            score_calculated = True
+
         for event in events:
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
-                game_state = "MENU"
-
-        # ============================================
-        # RENDER GAME OVER SCREEN
-        # ============================================
-        # RENDER BACKGROUND
-        background.draw(ctx)
-
-        # OVERLAY MERAH
-        ctx.set_source_rgba(*C_RED_TRANS)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    game_state = "MENU"
+        
+        
+        background.draw(ctx) 
+        
+        ctx.set_source_rgba(*C_RED_TRANS) 
         ctx.paint()
-
-        # TEKS GAME OVER
-        ctx.set_source_rgb(*C_WHITE)
-        ctx.set_font_size(60)
-        ctx.move_to(280, 150)
+        
+        ctx.set_source_rgb(*C_WHITE); ctx.set_font_size(60)
+        ctx.move_to(280, 150); 
         ctx.show_text("G A M E  O V E R")
-
-        # WAKTU BERTAHAN
-        timer_text = f"Waktu Bertahan: {last_skor_time:.2f} detik"
+        
         ctx.set_font_size(24)
-        ctx.move_to(290, 220)
-        ctx.show_text(timer_text)
-
-        # INSTRUKSI KEMBALI
+        ctx.move_to(290, 220); 
+        ctx.show_text(timer_end)
+        
         ctx.set_font_size(20)
-        ctx.move_to(310, 300)
+        ctx.move_to(310, 300); 
         ctx.show_text("Tekan ENTER ke Menu")
+                    
+    
 
     # ============================================
     # STATE: VICTORY
