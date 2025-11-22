@@ -179,9 +179,9 @@ while running:
         player_satu.update(dt, sfx)
         
         # CEK PLAYER MATI
-        if player_satu.health <= 0:
-            game_state = "GAMEOVER"
-            pygame.mixer.music.stop()
+        # if player_satu.health <= 0:
+        #     game_state = "GAMEOVER"
+        #     pygame.mixer.music.stop()
 
         # CEK VICTORY
         if wave_manager.is_game_cleared and len(enemy_list) == 0:
