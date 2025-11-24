@@ -157,7 +157,7 @@ while running:
     # ctx.paint()
     background.draw(ctx)
     background.draw_sts(ctx)
-    # background.draw_lobi(ctx)
+    background.draw_lobi(ctx)
     
     #GAMBAR OBJEK DISINI
     player_satu.draw(ctx)
