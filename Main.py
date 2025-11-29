@@ -12,6 +12,10 @@ from score.score import highscore, listScore
 from components.hearth import create_heart
 from components.scoreBoard import scoreBoard
 from components.arrow import draw_arrow
+from components.titleTxt import draw_title
+from components.scoreBoardMenu import draw_highscore
+from components.button import button
+from components.gameEvent import draw_game_func
 # ============================================
 # INISIALISASI PYGAME
 # ============================================
@@ -133,10 +137,13 @@ while running:
         # ============================================
         for event in events:
             if event.type == pygame.KEYDOWN:
-                # DEBUG VICTORY
+                # DEBUG VICTORY AND LOSE
                 if event.key == pygame.K_v:
                     wave_manager.is_game_cleared = True
                     enemy_list = []
+
+                if event.key == pygame.K_l:
+                    player_satu.health = 0
 
                 # CEK TARGET ENEMY
                 if target_enemy:
@@ -397,7 +404,7 @@ while running:
         # ============================================
         # SETUP TOMBOL
         # ============================================
-        tombol_rect = pygame.Rect((screen_width / 2) - 100, (screen_height / 2) - 25, 200, 50)
+        tombol_rect = pygame.Rect((screen_width / 2), (screen_height / 2) +150, 200, 50)
         mouse_pos = pygame.mouse.get_pos()
 
         # CEK HOVER TOMBOL
@@ -436,45 +443,23 @@ while running:
         background.draw(ctx)
 
         # RENDER JUDUL
-        ctx.set_source_rgb(*C_BLACK)
-        ctx.set_font_size(40)
-        ctx.move_to(400, 100)
-        ctx.show_text("AKADEMIA T(ERROR)")
+        draw_title(ctx, screen_width / 2, 100)
 
         ctx.move_to(0,0)
-        
 
-        # LIST SCORE
-        ctx.set_font_size(30)
-        ctx.move_to(0,200)
-        ctx.show_text("High score:")
 
         if Menu: 
             scoreList = listScore()
-
             Menu = False
 
-        lokasi = [250, 300, 350, 400, 450]
-        for i, data in enumerate(scoreList):
-                ctx.set_font_size(20)
-                ctx.move_to(50,lokasi[i])
-                ctx.show_text(f"{i+1}. {data}: {scoreList.get(data)}")
-
+        # LIST SCORE
+        draw_highscore(ctx, screen_width / 3, 150, 400, 250, scoreList)
         
         # RENDER TOMBOL MULAI
         if tombol_hover:
-            ctx.set_source_rgb(*C_WHITE)
+            button(ctx, tombol_rect.x, tombol_rect.y, tombol_rect.width, tombol_rect.height, C_WHITE, (0.2, 0.2, 0.2, 1),  "Mulai", (0,0,0,1))
         else:
-            ctx.set_source_rgb(*C_LAPTOP_GREY)
-
-        ctx.rectangle(tombol_rect.x, tombol_rect.y, tombol_rect.width, tombol_rect.height)
-        ctx.fill()
-
-        # RENDER TEKS TOMBOL
-        ctx.set_source_rgb(*C_BLACK)
-        ctx.set_font_size(30)
-        ctx.move_to(550, 310)
-        ctx.show_text("MULAI")
+            button(ctx, tombol_rect.x, tombol_rect.y, tombol_rect.width, tombol_rect.height, C_LAPTOP_GREY, (0.2, 0.2, 0.2, 1),  "Mulai", (1,1,1 ,1))
 
         
     elif game_state == "GAMEOVER":
@@ -497,19 +482,7 @@ while running:
         
         ctx.set_source_rgba(*C_RED_TRANS) 
         ctx.paint()
-        
-        ctx.set_source_rgb(*C_WHITE); ctx.set_font_size(60)
-        ctx.move_to(280, 150); 
-        ctx.show_text("G A M E  O V E R")
-        
-        ctx.set_font_size(24)
-        ctx.move_to(290, 220); 
-        ctx.show_text(timer_end)
-        
-        ctx.set_font_size(20)
-        ctx.move_to(310, 300); 
-        ctx.show_text("Tekan ENTER ke Menu")
-                    
+        draw_game_func(ctx, 0, 0, screen_width, screen_height, float(timer_end), scoreList["you"])
     
 
     # ============================================
@@ -533,23 +506,7 @@ while running:
         ctx.set_source_rgba(*C_GREEN_TRANS)
         ctx.paint()
 
-        # TEKS VICTORY
-        ctx.set_source_rgb(*C_GREEN)
-        ctx.set_font_size(80)
-        ctx.move_to(350, 200)
-        ctx.show_text("V I C T O R Y !")
-
-        # WAKTU TOTAL
-        timer_text = f"Waktu Total: {last_skor_time:.2f} detik"
-        ctx.set_source_rgb(*C_WHITE)
-        ctx.set_font_size(24)
-        ctx.move_to(380, 260)
-        ctx.show_text(timer_text)
-
-        # INSTRUKSI KEMBALI
-        ctx.set_font_size(20)
-        ctx.move_to(410, 340)
-        ctx.show_text("Tekan ENTER ke Menu")
+        draw_game_func(ctx, 0, 0, screen_width, screen_height, float(last_skor_time), scoreList["you"], True)
 
     # ============================================
     # CLEANUP CAIRO DAN RENDER KE SCREEN

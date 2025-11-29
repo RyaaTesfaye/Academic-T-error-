@@ -6,19 +6,16 @@ def highscore(score):
         highscore = json.load(file)
 
     if score > highscore["you"]:
-        highscore["you"] = score
+        highscore["you"] = int(score * 100) / 100
         with open(path, 'w', encoding='utf-8') as file:
             json.dump(highscore, file, indent=4)
 
-        return f"NEW HIGH SCORE!: {score:.2f} detik"
+        return highscore["you"]
     else:
-        return f"Waktu Bertahan: {score:.2f} detik"
+        return int(score * 100) / 100
     
 def listScore():
     with open(path, 'r') as file:
         score = json.load(file)
     
     return score
-
-def scoreBoard(score):
-    pass
