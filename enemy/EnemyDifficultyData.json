@@ -19,7 +19,7 @@
       "BTW",
       "WP"
     ],
-    "speed": 90,
+    "speed": 120,
     "radius": 10,
     "shape": "Goblin"
   },
@@ -48,7 +48,7 @@
       "JAVA",
       "HTML"
     ],
-    "speed": 60,
+    "speed": 90,
     "radius": 20,
     "shape": "Skeleton"
   },
@@ -71,7 +71,7 @@
       "KALKULUS",
       "STATISTIKA"
     ],
-    "speed": 45,
+    "speed": 75,
     "radius": 18,
     "shape": "Ahmat"
   },
@@ -93,7 +93,7 @@
       "HER",
       "GALAU"
     ],
-    "speed": 36,
+    "speed": 66,
     "radius": 25,
     "shape": "Alpin"
   },
@@ -110,7 +110,7 @@
       "KRIPTOGRAFI",
       "KOMPUTASIONAL"
     ],
-    "speed": 30,
+    "speed": 60,
     "radius": 50,
     "shape": "Boss"
   }

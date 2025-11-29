@@ -522,6 +522,7 @@ while running:
             Menu = True
             Main = True
             score_calculated = True
+            pygame.mixer.music.stop()
 
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -539,6 +540,13 @@ while running:
     # STATE: VICTORY
     # ============================================
     elif game_state == "VICTORY":
+        if pygame.mixer.music.get_busy():
+            pygame.mixer.music.stop()
+        if not score_calculated:
+            timer_end = highscore(last_skor_time)
+            Menu = True
+            Main = True
+            score_calculated = True
         # ============================================
         # INPUT KEMBALI KE MENU
         # ============================================

@@ -43,5 +43,5 @@ laser_width_glow = 8
 
 
 #ENEMY
-interval_spawn = 3
+interval_spawn = 1
 
