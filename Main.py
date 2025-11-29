@@ -86,6 +86,7 @@ last_skor_time = 0
 Menu = True
 Main = True
 start_time = 0
+paused = False
 
 # ============================================
 # GAME LOOP UTAMA
@@ -128,11 +129,6 @@ while running:
     if game_state == "PLAY":
 
         # ============================================
-        # HITUNG WAKTU GAME
-        # ============================================
-        game_time = (pygame.time.get_ticks() / 1000) - start_time
-
-        # ============================================
         # INPUT KETIKAN PEMAIN
         # ============================================
         for event in events:
@@ -151,136 +147,188 @@ while running:
                         pressed_letter = event.unicode.upper()
                         target_word = target_enemy.target_word.upper()
                         current_index = len(current_type_word)
+                if event.key == pygame.K_ESCAPE:
+                    paused = not paused
+                    if paused:
+                        pygame.mixer.music.pause() 
+                    else:
+                        pygame.mixer.music.unpause()
+                    continue  
+                
+                if not paused:
+                    # DEBUG VICTORY
+                    if event.key == pygame.K_v:
+                        wave_manager.is_game_cleared = True
+                        enemy_list = []
 
-                        # CEK HURUF BENAR
-                        if current_index < len(target_word) and pressed_letter == target_word[current_index]:
-                            current_type_word += pressed_letter
+                    # CEK TARGET ENEMY
+                    if target_enemy:
+                        if event.unicode.isalpha():
+                            pressed_letter = event.unicode.upper()
+                            target_word = target_enemy.target_word.upper()
+                            current_index = len(current_type_word)
 
-                            # PLAY SFX LASER
-                            if sfx["laser"]:
-                                sfx["laser"].play()
+                            # CEK HURUF BENAR
+                            if current_index < len(target_word) and pressed_letter == target_word[current_index]:
+                                current_type_word += pressed_letter
 
-                            # SPAWN LASER PARTIKEL
-                            new_laser = Laser(player_satu.x, player_satu.y, target_enemy)
-                            partikel_list.append(new_laser)
+                                # PLAY SFX LASER
+                                if sfx["laser"]:
+                                    sfx["laser"].play()
 
-                            # CEK KATA SELESAI
-                            if len(current_type_word) == len(target_word):
-                                target_enemy.is_alive = False
+                                # SPAWN LASER PARTIKEL
+                                new_laser = Laser(player_satu.x, player_satu.y, target_enemy)
+                                partikel_list.append(new_laser)
 
-                                # PLAY SFX BOMB
-                                if sfx["bomb"]:
-                                    sfx["bomb"].play()
+                                # CEK KATA SELESAI
+                                if len(current_type_word) == len(target_word):
+                                    target_enemy.is_alive = False
 
-                                # SPAWN BOMB PARTIKEL
-                                end_pos = (target_enemy.x, target_enemy.y)
-                                new_bomb = Bomb(player_satu.x, player_satu.y, end_pos)
-                                partikel_list.append(new_bomb)
+                                    # PLAY SFX BOMB
+                                    if sfx["bomb"]:
+                                        sfx["bomb"].play()
 
-                                # RESET TARGET
-                                target_enemy = None
+                                    # SPAWN BOMB PARTIKEL
+                                    end_pos = (target_enemy.x, target_enemy.y)
+                                    new_bomb = Bomb(player_satu.x, player_satu.y, end_pos)
+                                    partikel_list.append(new_bomb)
+
+                                    # RESET TARGET
+                                    target_enemy = None
+                                    current_type_word = ""
+                            else:
+                                # SALAH KETIK - RESET
                                 current_type_word = ""
+                                target_enemy.speed_up()
+            
+            # MOUSE EVENT - HANYA JALAN KALAU TIDAK PAUSE
+            elif event.type == pygame.MOUSEBUTTONDOWN and not paused:
+                if Main:
+                    continue
+                    
+                mouse_pos = event.pos
+                arrow_hitbox = pygame.Rect(0, 0, 30, 30)
+                arrow_hitbox.center = (arrow_x, arrow_y)
+
+                if arrow_hitbox.collidepoint(mouse_pos):
+                    if current_time - last_click_time > click_cooldown:
+                        Is_Full = not Is_Full
+                        last_click_time = current_time
+                        if Is_Full:
+                            arrow_y = 60
                         else:
-                            # SALAH KETIK - RESET
-                            current_type_word = ""
-                            target_enemy.speed_up()
+                            arrow_y = 217
 
         # ============================================
-        # UPDATE PLAYER
+        # GAME LOGIC - HANYA JALAN KALAU TIDAK PAUSE
         # ============================================
-        player_satu.update(dt, sfx)
-        
-        # CEK PLAYER MATI
-        if player_satu.health <= 0:
-            game_state = "GAMEOVER"
-            pygame.mixer.music.stop()
+        if not paused:
+            # HITUNG WAKTU GAME
+            game_time = (pygame.time.get_ticks() / 1000) - start_time
+            
+            # ============================================
+            # UPDATE PLAYER
+            # ============================================
+            player_satu.update(dt, sfx)
+            
+            # CEK PLAYER MATI
+            if player_satu.health <= 0:
+                game_state = "GAMEOVER"
+                pygame.mixer.music.stop()
 
-        # CEK VICTORY
-        if wave_manager.is_game_cleared and len(enemy_list) == 0:
-            game_state = "VICTORY"
+            # CEK VICTORY
+            if wave_manager.is_game_cleared and len(enemy_list) == 0:
+                game_state = "VICTORY"
 
-        # UPDATE SKOR TIME
-        last_skor_time = game_time
+            # UPDATE SKOR TIME
+            last_skor_time = game_time
 
-        # ============================================
-        # SPAWNER ENEMY
-        # ============================================
-        enemy_to_spawn = wave_manager.update(dt, len(enemy_list))
+            # ============================================
+            # SPAWNER ENEMY
+            # ============================================
+            enemy_to_spawn = wave_manager.update(dt, len(enemy_list))
 
-        # SPAWN ENEMY JIKA ADA
-        if enemy_to_spawn:
-            side = random.choice(['atas', 'bawah', 'kanan', 'kiri'])
-            spawn_padding = 20
+            # SPAWN ENEMY JIKA ADA
+            if enemy_to_spawn:
+                side = random.choice(['atas', 'bawah', 'kanan', 'kiri'])
+                spawn_padding = 20
 
-            # TENTUKAN POSISI SPAWN
-            if side == 'atas':
-                spawn_x = random.randint(0, screen_width)
-                spawn_y = -spawn_padding
-            elif side == 'bawah':
-                spawn_x = random.randint(0, screen_width)
-                spawn_y = screen_height + spawn_padding
-            elif side == 'kanan':
-                spawn_x = screen_width + spawn_padding
-                spawn_y = random.randint(0, screen_height)
-            elif side == 'kiri':
-                spawn_x = -spawn_padding
-                spawn_y = random.randint(0, screen_height)
+                # TENTUKAN POSISI SPAWN
+                if side == 'atas':
+                    spawn_x = random.randint(0, screen_width)
+                    spawn_y = -spawn_padding
+                elif side == 'bawah':
+                    spawn_x = random.randint(0, screen_width)
+                    spawn_y = screen_height + spawn_padding
+                elif side == 'kanan':
+                    spawn_x = screen_width + spawn_padding
+                    spawn_y = random.randint(0, screen_height)
+                elif side == 'kiri':
+                    spawn_x = -spawn_padding
+                    spawn_y = random.randint(0, screen_height)
 
-            # BUAT ENEMY BARU
-            new_enemy = Enemy(spawn_x, spawn_y, enemy_to_spawn)
-            enemy_list.append(new_enemy)
+                # BUAT ENEMY BARU
+                new_enemy = Enemy(spawn_x, spawn_y, enemy_to_spawn)
+                enemy_list.append(new_enemy)
 
-        # ============================================
-        # UPDATE SEMUA ENEMY
-        # ============================================
-        for enemy in enemy_list:
-            enemy.update(dt, player_satu)
-
-        # ============================================
-        # CEK TARGET ENEMY
-        # ============================================
-        # CEK TARGET MASIH HIDUP
-        if target_enemy:
-            if not target_enemy.is_alive:
-                target_enemy = None
-                current_type_word = ""
-
-        # CARI TARGET TERDEKAT
-        if not target_enemy:
-            closest_enemy = None
-            min_distance = float('inf')
-
+            # ============================================
+            # UPDATE SEMUA ENEMY
+            # ============================================
             for enemy in enemy_list:
-                distance = math.hypot(player_satu.x - enemy.x, player_satu.y - enemy.y)
+                enemy.update(dt, player_satu)
 
-                if distance <= player_satu.attack_range:
-                    if distance < min_distance:
-                        min_distance = distance
-                        closest_enemy = enemy
+            # ============================================
+            # CEK TARGET ENEMY
+            # ============================================
+            # CEK TARGET MASIH HIDUP
+            if target_enemy:
+                if not target_enemy.is_alive:
+                    target_enemy = None
+                    current_type_word = ""
 
-            # SET TARGET BARU
-            if closest_enemy:
-                target_enemy = closest_enemy
-                current_type_word = ""
+            # CARI TARGET TERDEKAT
+            if not target_enemy:
+                closest_enemy = None
+                min_distance = float('inf')
 
-        # CEK ULANG TARGET HIDUP
-        if target_enemy and not target_enemy.is_alive:
-            target_enemy = None
+                for enemy in enemy_list:
+                    distance = math.hypot(player_satu.x - enemy.x, player_satu.y - enemy.y)
+
+                    if distance <= player_satu.attack_range:
+                        if distance < min_distance:
+                            min_distance = distance
+                            closest_enemy = enemy
+
+                # SET TARGET BARU
+                if closest_enemy:
+                    target_enemy = closest_enemy
+                    current_type_word = ""
+
+            # CEK ULANG TARGET HIDUP
+            if target_enemy and not target_enemy.is_alive:
+                target_enemy = None
+
+            # ============================================
+            # UPDATE PARTIKEL
+            # ============================================
+            for partikel in partikel_list:
+                partikel.update(dt)
+            
+            # ============================================
+            # UPDATE SCOREBOARD TIME
+            # ============================================
+            if not Main:
+                waktu = f"{game_time:.2f}"
+                liveScore["you"] = float(waktu)
 
         # ============================================
-        # UPDATE PARTIKEL
+        # RENDER (TETAP RENDER SAAT PAUSE)
         # ============================================
-        for partikel in partikel_list:
-            partikel.update(dt)
-
-        # ============================================
+        
         # RENDER BACKGROUND
-        # ============================================
         background.draw(ctx)
 
-        # ============================================
         # RENDER PLAYER
-        # ============================================
         player_satu.draw(ctx)
 
         # ============================================
@@ -330,7 +378,6 @@ while running:
         for partikel in partikel_list:
             partikel.draw(ctx)
 
-
         # ============================================
         # UI SCORE BOARD
         # ============================================
@@ -341,25 +388,7 @@ while running:
             Is_Full = True
             Main = False
             arrow_x, arrow_y = 1070, 60
-        waktu = f"{game_time:.2f}"
-        liveScore["you"] = float(waktu)
-
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            mouse_pos = event.pos
-            arrow_hitbox = pygame.Rect(0, 0, 30, 30) 
-            if Is_Full:
-                arrow_hitbox.center = (arrow_x, arrow_y)
-            else:
-                arrow_hitbox.center = (arrow_x, arrow_y)
-
-            if arrow_hitbox.collidepoint(mouse_pos):
-                if current_time - last_click_time > click_cooldown:
-                    Is_Full = not Is_Full
-                    last_click_time = current_time
-                    if Is_Full:
-                        arrow_y = 60
-                    else:
-                        arrow_y = 217
+            game_time = 0  # Inisialisasi game_time
 
         SxoreBoard = scoreBoard(ctx, liveScore, 950, 0, Is_Full)
         draw_arrow(ctx, arrow_x, arrow_y, direction=Is_Full)
@@ -396,7 +425,30 @@ while running:
                 ctx.set_line_width(2)
                 create_heart(ctx, kotak_x, kotak_y, hp_size, hp_size, C_LAPTOP_GREY)
                 ctx.stroke()
-
+        
+        # ============================================
+        # PAUSE OVERLAY (DI PALING AKHIR)
+        # ============================================
+        if paused:
+            # OVERLAY GELAP
+            ctx.set_source_rgba(0, 0, 0, 0.5) 
+            ctx.paint()
+            
+            # TEKS PAUSED
+            ctx.set_source_rgb(1, 1, 1) 
+            ctx.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+            ctx.set_font_size(60)
+            
+            text = "P A U S E D"
+            (xb, yb, width, height, xa, ya) = ctx.text_extents(text)
+            ctx.move_to((screen_width/2) - (width/2), screen_height/2)
+            ctx.show_text(text)
+            
+            # INSTRUKSI
+            ctx.set_font_size(20)
+            ctx.move_to((screen_width/2) - 90, (screen_height/2) + 40)
+            ctx.show_text("Tekan ESC untuk Lanjut")
+            
     # ============================================
     # STATE: MENU
     # ============================================
@@ -429,10 +481,9 @@ while running:
                     partikel_list = []
                     current_type_word = ""
                     target_enemy = None
-                    last_spawn_time = current_time
                     score_calculated = False
+                    paused = False  # Reset pause state
         
-        #GAMBAR BG DISINI
                     wave_manager = wave_managers()
                     start_time = pygame.time.get_ticks() / 1000
 
@@ -447,7 +498,6 @@ while running:
 
         ctx.move_to(0,0)
 
-
         if Menu: 
             scoreList = listScore()
             Menu = False
@@ -461,9 +511,10 @@ while running:
         else:
             button(ctx, tombol_rect.x, tombol_rect.y, tombol_rect.width, tombol_rect.height, C_LAPTOP_GREY, (0.2, 0.2, 0.2, 1),  "Mulai", (1,1,1 ,1))
 
-        
+    # ============================================
+    # STATE: GAMEOVER
+    # ============================================    
     elif game_state == "GAMEOVER":
-
         global timer_end
     
         if not score_calculated:
@@ -476,7 +527,6 @@ while running:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RETURN:
                     game_state = "MENU"
-        
         
         background.draw(ctx) 
         
@@ -522,7 +572,7 @@ while running:
     # ============================================
     # CLEANUP OBJEK MATI
     # ============================================
-    if game_state == "PLAY":
+    if game_state == "PLAY" and not paused:
         enemy_list = [e for e in enemy_list if e.is_alive]
         partikel_list = [p for p in partikel_list if p.is_alive]
 
