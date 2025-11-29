@@ -23,8 +23,6 @@ enemy_list = []
 partikel_list = []
 
 
-
-
 #------------------
 target_enemy = None
 current_type_word = ""
@@ -157,7 +155,9 @@ while running:
     # ctx.paint()
     background.draw(ctx)
     background.draw_sts(ctx)
-    # background.draw_lobi(ctx)
+    background.draw_lobi(ctx)
+    background.draw_doubleway(ctx)
+    background.draw_parkiran(ctx)
     
     #GAMBAR OBJEK DISINI
     player_satu.draw(ctx)
