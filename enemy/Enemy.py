@@ -8,6 +8,7 @@ from components.enemy.drawGhost import draw_ghost
 from components.enemy.drawSkeleton import draw_skeleton
 from components.enemy.drawBook import draw_book
 from components.enemy.drawHeart import draw_heart
+from components.enemy.drawBoss import drawBoss
 
 
 # settings
@@ -40,6 +41,7 @@ class Enemy:
         self.y = float(y)
         self.is_alive = True
         self.possition = True
+        self.frame_index = 1
         
         self.enemy_type = enemy_type
         self.target_word = random.choice(data["word_list"]).upper()
@@ -93,14 +95,8 @@ class Enemy:
         elif self.shape == "Alpin":
             draw_heart(ctx, 0, 0, 1, image4, self.possition)
         elif self.shape == "Boss":
-            ctx.rectangle(-self.radius/2, -self.radius/2, self.radius, self.radius)
-            ctx.fill()
-            ctx.set_source_rgb(*C_BLACK)
-            ctx.set_line_width(5)
-            ctx.move_to(0, -self.radius); ctx.line_to(0, self.radius) 
-            ctx.move_to(-self.radius, 0); ctx.line_to(self.radius, 0) 
-            ctx.stroke()
-        
+            drawBoss(ctx, self.frame_index, 5, 5, 0.25)
+            self.frame_index += 1
         
         ctx.restore()
         
