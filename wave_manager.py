@@ -5,88 +5,79 @@ from Settings import *
 wave = [
     # WAVE 1
     [
-        "sedang", "sedang", "elite", "sedang",
-        "elite", "elite", "sedang",
-        "susah",
-        "elite", "sedang"
+        "gampang", "gampang", "sedang", "gampang", 
+        "elite", "sedang", "gampang", "elite"
     ],
 
     # WAVE 2
     [
-        "elite", "elite", "elite", "elite", 
-        "sedang", "sedang", 
-        "elite", "elite", "elite", "elite",
-        "susah", "susah"
+        "elite", "elite", "gampang", "gampang", 
+        "elite", "elite", "elite", 
+        "sedang", "sedang", "elite"
     ],
 
     # WAVE 3
     [
-        "susah", "gampang", "susah", 
-        "susah", "susah", "susah",
-        "sedang", "susah", "susah",
-        "elite", "elite"
+        "susah", "sedang", "susah", 
+        "gampang", "gampang",
+        "susah", "susah", "susah"
     ],
 
     # WAVE 4
     [
-        "gampang", "gampang", "gampang", "gampang", 
+        "gampang", "gampang", "gampang", "gampang", "gampang",
+        "sedang", "sedang", "sedang",
         "elite", "elite", "elite",
-        "susah", "sedang", "susah",
-        "elite", "elite", "elite",
-        "gampang", "gampang", "gampang"
+        "susah", "gampang", "susah"
     ],
 
-    # WAVE 5
+    # WAVE 
     [
-        "sedang", "sedang", "sedang",
-        "susah", "susah", 
-        "boss",
-        "elite", "elite", "elite" 
+        "sedang", "sedang", 
+        "boss", 
+        "sedang", "sedang", "elite", "elite"
     ],
 
     # WAVE 6
     [
         "elite", "susah", "elite", "susah",
         "elite", "susah", "elite", "susah",
-        "elite", "susah", "elite", "susah",
-        "sedang", "sedang"
+        "elite", "elite", "elite"
     ],
 
     # WAVE 7
     [
-        "elite", "gampang", "elite", "gampang",
-        "elite", "gampang", "elite", "gampang",
-        "elite", "elite", "elite", "elite",
-        "elite", "elite", "elite"
+        "susah", "susah",
+        "boss",
+        "gampang", "gampang", "gampang", "gampang", 
+        "boss",
+        "susah"
     ],
 
     # WAVE 8
     [
-        "susah", "susah", "susah", 
-        "elite", "elite", "elite", 
+        "gampang", "gampang", "gampang", "gampang",
         "sedang", "sedang", "sedang",
-        "susah", "susah", "susah",
-        "elite", "elite", "elite", 
-        "gampang", "gampang", "gampang" 
+        "elite", "elite", "elite", "elite",
+        "susah", "susah", "susah", "susah",
+        "boss"
     ],
 
     # WAVE 9
     [
-        "susah", "elite", "susah", "elite",
-        "susah", "elite", "susah", "elite",
-        "boss", 
-        "susah", "susah"
+        "boss", "boss", 
+        "susah", "susah", "susah", "susah",
+        "elite", "elite", "elite"
     ],
 
     # WAVE 10
     [
-        "gampang", "gampang", "gampang", "gampang", "gampang", 
+        "gampang", "gampang", "gampang", "gampang", "gampang",
+        "boss", "boss", "boss", 
         "susah", "susah", "susah", 
-        "boss", 
-        "elite", "elite", "elite", 
-        "susah", "susah", 
+        "elite", "elite", "elite", "elite", 
         "gampang", "gampang", "gampang" 
-    ]   
+    ]
 ]
 
 class wave_managers:
@@ -114,14 +105,13 @@ class wave_managers:
             return
         
         if len(self.enemy_queue) == 0 and active_enemy_count == 0:
+            
             if self.is_wave_active:
                 self.is_wave_active = False
-                self.spawn_timer = 1
                 self.current_wave_idx += 1
-            else:
-                self.spawn_timer -= dt
-                if self.spawn_timer <= 0:
-                    self.start_next_wave()
+                return "WAVE_CLEARED" 
+            
+            return None
                     
         if self.is_wave_active and len(self.enemy_queue) > 0:
             self.spawn_timer -= dt
@@ -130,7 +120,7 @@ class wave_managers:
                 enemy_type = self.enemy_queue.pop(0)
                 
                 if enemy_type == "BOSS_SKRIPSI":
-                    self.spawn_timer = 4.0
+                    self.spawn_timer = 3.0
                 else:
                     self.spawn_timer = random.uniform(1.5, 2.5)
                 return enemy_type
