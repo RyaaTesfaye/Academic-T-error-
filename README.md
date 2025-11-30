@@ -13,7 +13,7 @@
 1.  **Clone repositori ini:**
     ```bash
     git clone https://github.com/RyaaTesfaye/Academic-T-error-.git
-    cd Akademia-T-error
+    cd Academic-T-error-
     ```
 
 2.  **Instal Pygame & Pycairo:**

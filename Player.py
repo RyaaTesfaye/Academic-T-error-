@@ -8,7 +8,7 @@ from Settings import *
 class Player:
     def __init__(self):
         self.x = screen_width // 2 
-        self.y = screen_height // 2 + 60
+        self.y = screen_height // 2
         self.health = max_health_player
         self.is_attacking = False
         self.attack_range = attack_range_player

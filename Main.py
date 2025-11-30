@@ -107,11 +107,14 @@ while running:
                     continue  
                 
                 if not paused:
+                    # DEBUG
                     if event.key == pygame.K_v: 
                         wave_manager.is_game_cleared = True
                         enemy_list = []
                     if event.key == pygame.K_q: 
                         player_satu.health = 0
+                    if event.key == pygame.K_b:
+                        background.next_background()
 
                     # mekanik ngetik buat nembak musuh
                     if target_enemy:
@@ -313,6 +316,8 @@ while running:
                     
                 if upgrade_chosen:
                     wave_manager.start_next_wave()
+                    if (wave_manager.current_wave_idx + 1) % 3 == 0:
+                        background.next_background()
                     game_state = "PLAY"
         
         background.draw(ctx)
