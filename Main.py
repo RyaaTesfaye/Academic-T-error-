@@ -107,14 +107,16 @@ while running:
                     continue  
                 
                 if not paused:
+                    
                     # DEBUG
-                    if event.key == pygame.K_v: 
-                        wave_manager.is_game_cleared = True
-                        enemy_list = []
-                    if event.key == pygame.K_q: 
-                        player_satu.health = 0
-                    if event.key == pygame.K_b:
-                        background.next_background()
+                    # if event.key == pygame.K_v: 
+                    #     wave_manager.is_game_cleared = True
+                    #     enemy_list = []
+                    # if event.key == pygame.K_q: 
+                    #     player_satu.health = 0
+                    # if event.key == pygame.K_b:
+                    #     background.next_background()
+
 
                     # mekanik ngetik buat nembak musuh
                     if target_enemy:
@@ -193,7 +195,7 @@ while running:
                 liveScore["you"] = float(f"{game_time:.2f}")
 
         # RENDER
-        background.draw(ctx)
+        background.draw(screen)
         player_satu.draw(ctx)
 
         for enemy in enemy_list:
@@ -255,7 +257,7 @@ while running:
                     wave_manager = wave_managers()
                     start_time = pygame.time.get_ticks() / 1000
 
-        background.draw(ctx)
+        background.draw(screen)
         if Menu:
             scoreList = listScore(); Menu = False
             
@@ -279,7 +281,7 @@ while running:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 game_state = "MENU"
         
-        background.draw(ctx)
+        background.draw(screen)
         ui_manager.draw_game_over(ctx, screen_width, screen_height, timer_end, scoreList.get("you", 0))
 
     # ============================================
@@ -299,7 +301,7 @@ while running:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 game_state = "MENU"
 
-        background.draw(ctx)
+        background.draw(screen)
         ui_manager.draw_victory(ctx, screen_width, screen_height, last_skor_time, scoreList.get("you", 0))
 
     # ============================================
@@ -326,7 +328,7 @@ while running:
                         background.next_background()
                     game_state = "PLAY"
         
-        background.draw(ctx)
+        background.draw(screen)
         player_satu.draw(ctx)
         ui_manager.draw_level_up(ctx, screen_width)
 

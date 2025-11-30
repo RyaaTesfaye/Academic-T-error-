@@ -1,20 +1,44 @@
 import cairo
 import math
+import pygame
 from Settings import *
-
 
 class Background:
     def __init__(self):
         self.current_bg = 0
+        self.cached_surfaces = []
         self.bg_list = [
             self.draw_sts,
             self.draw_lobi,
             self.draw_doubleway,
             self.draw_parkiran
         ]
+        
+        self.pre_render_all()
+        
+    def pre_render_all(self):
+        for draw_func in self.bg_list:
+            surf = pygame.Surface((screen_width, screen_height))
+            
+            surf_bridge = cairo.ImageSurface.create_for_data(
+                surf.get_buffer(), 
+                cairo.FORMAT_ARGB32, 
+                screen_width, 
+                screen_height
+            )
+            ctx = cairo.Context(surf_bridge)
+            
+            draw_func(ctx)
+            
+            self.cached_surfaces.append(surf)
+            
+            del ctx
+            del surf_bridge
 
-    def draw(self, ctx):
-        self.bg_list[self.current_bg](ctx)
+    def draw(self, screen):
+        bg_image = self.cached_surfaces[self.current_bg]
+        
+        screen.blit(bg_image, (0, 0))
     
     def next_background(self):
         self.current_bg = (self.current_bg + 1) % len(self.bg_list)
