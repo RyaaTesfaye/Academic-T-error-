@@ -5,13 +5,16 @@ class SoundManager:
         self.sfx_files = {
             "laser": "lib/sfx/laser_mini.wav",
             "bomb": "lib/sfx/explosion_enem.wav",
-            "glitch": "lib/sfx/glitch_char.wav"
+            "glitch": "lib/sfx/glitch_char.wav",
+            "game_over": "lib/sfx/game_over.wav",
+            "victory": "lib/sfx/victory.wav"
         }
         self.sfx = {}
         
         self.bgm_playlist = [
-            {"name": "33x", "path": "lib/sfx/BGM_PERUNGGU.ogg"},
-            {"name": "Hampstead", "path": "lib/sfx/BGM_HAMPSTEAD.ogg"}
+            {"name": "Hampstead", "path": "lib/sfx/BGM_HAMPSTEAD.ogg"},
+            {"name": "Mario Kart", "path": "lib/sfx/BGM_1.ogg"},
+            
         ]
         self.current_bgm_index = 0 
 
@@ -36,7 +39,7 @@ class SoundManager:
         song = self.bgm_playlist[self.current_bgm_index]
         try:
             pygame.mixer.music.load(song["path"])
-            pygame.mixer.music.set_volume(0.2)
+            pygame.mixer.music.set_volume(0.3)
         except Exception as e:
             print(f"Gagal load BGM '{song['name']}': {e}")
 

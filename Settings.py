@@ -32,7 +32,7 @@ glitch_alpha = 0.7
 
 #PLAYER
 max_health_player = 5
-attack_range_player = 250
+attack_range_player = 200
 
 # PARTIKEL
 laser_speed = 900

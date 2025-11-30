@@ -269,8 +269,11 @@ while running:
     elif game_state == "GAMEOVER":
         if not score_calculated:
             timer_end = highscore(last_skor_time)
-            Menu = True; Main = True; score_calculated = True
+            Menu = True
+            Main = True
+            score_calculated = True
             sound_manager.stop_bgm()
+            sound_manager.play_sfx("game_over")
 
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
@@ -287,7 +290,10 @@ while running:
             sound_manager.stop_bgm()
         if not score_calculated:
             timer_end = highscore(last_skor_time)
-            Menu = True; Main = True; score_calculated = True
+            Menu = True
+            Main = True
+            score_calculated = True
+            sound_manager.play_sfx("victory")
 
         for event in events:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
