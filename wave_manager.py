@@ -5,7 +5,7 @@ from Settings import *
 wave = [
     # WAVE 1
     [
-        "boss","gampang", "gampang", "sedang", "gampang", 
+        "gampang", "gampang", "sedang", "gampang", 
         "elite", "sedang", "gampang", "elite"
     ],
 
