@@ -449,3 +449,5 @@ class Background:
                 ctx.stroke()
             
             current_y += ROW_GAP
+            
+            #test wok
