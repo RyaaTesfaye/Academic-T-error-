@@ -10,10 +10,14 @@ from components.titleTxt import draw_title
 from components.scoreBoardMenu import draw_highscore
 from components.button import button
 from components.gameEvent import draw_game_func
+from components.card.health import drawHealthCard
+from components.card.range import drawCardRange
+from components.card.score import drawCardScore
 
 class UI:
     def __init__(self):
         self.font_family = "Arial"
+        self.loop = 1
     
     def draw_hud(self, ctx, player, wave_manager, screen_height, screen_width):
         ctx.set_source_rgb(*C_BLACK)
@@ -107,22 +111,10 @@ class UI:
         ctx.show_text("PILIH UPGRADE:")
         
         card_w = 200
-        card_h = 150
         gap = 20
-        start_x = (screen_width - (3 * card_w + 2 * gap)) / 2
-        y_pos = 200
-        
-        ctx.set_source_rgb(0.2, 0.8, 0.2)
-        ctx.rectangle(start_x, y_pos, card_w, card_h); ctx.fill()
-        ctx.set_source_rgb(*C_BLACK); ctx.set_font_size(20)
-        ctx.move_to(start_x + 20, y_pos + 80); ctx.show_text("[1] HEAL +1")
-        
-        ctx.set_source_rgb(0.2, 0.6, 1.0)
-        ctx.rectangle(start_x + card_w + gap, y_pos, card_w, card_h); ctx.fill()
-        ctx.set_source_rgb(*C_BLACK)
-        ctx.move_to(start_x + card_w + gap + 20, y_pos + 80); ctx.show_text("[2] RANGE +10")
-        
-        ctx.set_source_rgb(1.0, 0.5, 0.0)
-        ctx.rectangle(start_x + (card_w + gap)*2, y_pos, card_w, card_h); ctx.fill()
-        ctx.set_source_rgb(*C_BLACK)
-        ctx.move_to(start_x + (card_w + gap)*2 + 20, y_pos + 80); ctx.show_text("[3] SCORE ++")
+        iterasi = self.loop / 50
+
+        drawHealthCard(ctx, 250, 200, 200, 300, iterasi)
+        drawCardRange(ctx, 500, 200, 200, 300, iterasi)
+        drawCardScore(ctx, 750, 200, 200, 300, iterasi)
+        self.loop += 1

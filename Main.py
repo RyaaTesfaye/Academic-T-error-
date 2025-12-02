@@ -97,7 +97,7 @@ while running:
 
         # INPUT KETIKAN
         for event in events:
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.KEYDOWN:       
                 if event.key == pygame.K_ESCAPE:
                     paused = not paused
                     if paused: 
@@ -234,7 +234,6 @@ while running:
         tombol_hover = tombol_rect.collidepoint(mouse_pos)
 
         for event in events:
-            
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     sound_manager.next_bgm()
@@ -334,7 +333,7 @@ while running:
 
     # ============================================
     # CLEANUP
-    # ============================================
+    # ===========================x``=================
     surface_bridge.flush()
     del ctx
     del surface_bridge
